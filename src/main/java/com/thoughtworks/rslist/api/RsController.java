@@ -12,10 +12,11 @@ import java.util.stream.Stream;
 @RequestMapping("/rs")
 public class RsController {
 
-    private final List<RsEvent> rsList;
+    private final List<RsEvent> rsList = init();
 
-    {
-        rsList = Stream.of(
+    private List<RsEvent> init() {
+
+        return Stream.of(
                 RsEvent.builder().eventName("第一条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第二条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第三条事件").keyWord("无分类").build()
@@ -60,6 +61,14 @@ public class RsController {
         if (isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
             rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
         }
+    }
+
+    @DeleteMapping("/{index}")
+    public void deleteOneRsEvent(@PathVariable Integer index) throws Exception {
+        if (index > rsList.size()) {
+            throw new Exception("下标越界");
+        }
+        rsList.remove(index - 1);
     }
 
     private boolean isEmpty(String string) {

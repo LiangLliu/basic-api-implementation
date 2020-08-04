@@ -2,15 +2,15 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,11 +19,14 @@ import static org.hamcrest.Matchers.is;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class RsControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
+
+    @BeforeEach
+    public void init() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new RsController()).build();
+    }
 
     /**
      * @Nested 使用内部类的形式将同类型的测试放在一起
@@ -33,7 +36,6 @@ class RsControllerTest {
     public class GetRequestTest {
         @Test
         public void should_get_rs_list_when_given_get_request() throws Exception {
-
 
             mockMvc.perform(get("/rs/list"))
                     .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
@@ -185,6 +187,24 @@ class RsControllerTest {
                     .andExpect(status().isOk());
         }
 
+    }
+
+
+    @Nested
+    public class DeleteMethodTest {
+
+        @Test
+        public void should_delete_one_rs_event_when_given_index() throws Exception {
+            mockMvc.perform(delete("/rs/1"))
+                    .andExpect(status().isOk());
+
+            mockMvc.perform(get("/rs/list"))
+                    .andExpect(jsonPath("$[0].eventName", is("第二条事件")))
+                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
+                    .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
+                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
+                    .andExpect(status().isOk());
+        }
 
     }
 
