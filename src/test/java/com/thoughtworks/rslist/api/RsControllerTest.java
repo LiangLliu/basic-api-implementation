@@ -30,6 +30,13 @@ class RsControllerTest {
         getMethodTest("/rs/3", "第三条事件");
     }
 
+    @Test
+    public void should_get_a_list_of_ranges_when_given_between_two_index() throws Exception {
+        getMethodTest("/rs/list?start=1&end=2", "[第一条事件, 第二条事件]");
+        getMethodTest("/rs/list?start=2&end=3", "[第二条事件, 第三条事件]");
+        getMethodTest("/rs/list?start=1&end=3", "[第一条事件, 第二条事件, 第三条事件]");
+    }
+
     private void getMethodTest(String url, String result) throws Exception {
         mockMvc.perform(get(url))
                 .andExpect(content().string(result))
