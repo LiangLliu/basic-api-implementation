@@ -20,21 +20,19 @@ class RsControllerTest {
 
     @Test
     public void should_get_rs_list_when_given_get_request() throws Exception {
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(content().string("[第一条事件, 第二条事件, 第三条事件]"))
-                .andExpect(status().isOk());
+        getMethodTest("/rs/list", "[第一条事件, 第二条事件, 第三条事件]");
     }
 
     @Test
     public void should_get_one_rs_event_when_given_event_id() throws Exception {
-        mockMvc.perform(get("/rs/1"))
-                .andExpect(content().string("第一条事件"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/2"))
-                .andExpect(content().string("第二条事件"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/3"))
-                .andExpect(content().string("第三条事件"))
+        getMethodTest("/rs/1", "第一条事件");
+        getMethodTest("/rs/2", "第二条事件");
+        getMethodTest("/rs/3", "第三条事件");
+    }
+
+    private void getMethodTest(String url, String result) throws Exception {
+        mockMvc.perform(get(url))
+                .andExpect(content().string(result))
                 .andExpect(status().isOk());
     }
 
