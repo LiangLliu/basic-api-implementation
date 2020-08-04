@@ -25,4 +25,17 @@ class RsControllerTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void should_get_one_rs_event_when_given_event_id() throws Exception {
+        mockMvc.perform(get("/rs/1"))
+                .andExpect(content().string("第一条事件"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/2"))
+                .andExpect(content().string("第二条事件"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/3"))
+                .andExpect(content().string("第三条事件"))
+                .andExpect(status().isOk());
+    }
+
 }
