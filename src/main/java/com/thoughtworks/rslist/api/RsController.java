@@ -1,9 +1,9 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,6 +40,30 @@ public class RsController {
     @PostMapping("/event")
     public void addOneRsEvent(@RequestBody RsEvent rsEvent) {
         rsList.add(rsEvent);
+    }
+
+    @PutMapping("/{index}")
+    public void updateOneRsEvent(@PathVariable Integer index, @RequestBody RsEvent rsEventRequest) throws Exception {
+        if (index > rsList.size()) {
+            throw new Exception("下标越界");
+        }
+
+        if (!isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
+            rsList.get(index - 1).setEventName(rsEventRequest.getEventName());
+            rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
+        }
+
+        if (!isEmpty(rsEventRequest.getEventName()) && isEmpty(rsEventRequest.getKeyWord())) {
+            rsList.get(index - 1).setEventName(rsEventRequest.getEventName());
+        }
+
+        if (isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
+            rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
+        }
+    }
+
+    private boolean isEmpty(String string) {
+        return StringUtils.isEmpty(string);
     }
 
 
