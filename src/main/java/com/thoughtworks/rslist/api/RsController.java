@@ -3,7 +3,9 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
+import com.thoughtworks.rslist.exception.InvalidRequestParamException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -40,7 +42,12 @@ public class RsController {
     @GetMapping("/list")
     @JsonView(RsEvent.PublicView.class)
     public ResponseEntity<List<RsEvent>> getAllRsEvent(@RequestParam(required = false) Integer start,
-                                                       @RequestParam(required = false) Integer end) {
+                                                       @RequestParam(required = false) Integer end)
+            throws InvalidRequestParamException {
+        if (isOutOfRound(end)) {
+            throw new InvalidRequestParamException("invalid request para");
+        }
+
         if (start == null || end == null) {
             return ResponseEntity.ok(rsList);
         }
@@ -50,10 +57,14 @@ public class RsController {
     @GetMapping("/{index}")
     @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) throws InvalidIndexException {
-        if (index > rsList.size() - 1 || index < 0) {
+        if (isOutOfRound(index)) {
             throw new InvalidIndexException("invalid index");
         }
         return ResponseEntity.ok(rsList.get(index));
+    }
+
+    private boolean isOutOfRound(@PathVariable Integer index) {
+        return index > rsList.size() - 1 || index < 0;
     }
 
     @PostMapping("/event")
@@ -106,4 +117,10 @@ public class RsController {
     }
 
 
+    @ExceptionHandler({InvalidIndexException.class, InvalidRequestParamException.class})
+    public ResponseEntity exceptionHandler(RuntimeException exception) {
+        CommonError commonError = new CommonError();
+        commonError.setError(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
+    }
 }

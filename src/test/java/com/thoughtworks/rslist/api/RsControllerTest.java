@@ -1,20 +1,18 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.exception.CommonError;
-import com.thoughtworks.rslist.exception.InvalidIndexException;
-import com.thoughtworks.rslist.handle.ControllerHandle;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -105,6 +103,16 @@ class RsControllerTest {
                     .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
                     .andExpect(jsonPath("$[2].keyWord", is("无分类")))
                     .andExpect(status().isOk());
+
+
+
+        }
+
+        @Test
+        public void should_return_bad_request_when_given_invalid_out_of_round() throws Exception {
+            mockMvc.perform(get("/rs/list?start=0&end=10"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error", is("invalid request para")));
         }
 
         @Test
