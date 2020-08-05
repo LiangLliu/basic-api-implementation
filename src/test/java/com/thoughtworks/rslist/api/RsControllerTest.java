@@ -141,13 +141,15 @@ class RsControllerTest {
                     .andExpect(header().string("index", "3"))
                     .andExpect(status().isCreated());
 
-            mockMvc.perform(get("/rs/list"))
-                    .andExpect(jsonPath("$[3].user.userName", is(rsEvent.getUser().getUserName())))
-                    .andExpect(status().isOk());
-
             mockMvc.perform(get("/rs/user/list"))
                     .andExpect(jsonPath("$.length()").value(expiredLength))
                     .andExpect(status().isOk());
+
+            mockMvc.perform(get("/rs/3"))
+                    .andExpect(jsonPath("$.user.userName", is(rsEvent.getUser().getUserName())))
+                    .andExpect(status().isOk());
+
+
         }
 
 

@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.springframework.http.HttpStatus;
@@ -7,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,19 +23,22 @@ public class RsController {
     private final List<User> userList;
 
     {
+        userList = Stream.of(
+                new User("xiaowang", 20, "male", "b@thoughtworks.com", "11234567890")
+        ).collect(Collectors.toList());
+
         rsList = Stream.of(
                 RsEvent.builder().eventName("第一条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第二条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第三条事件").keyWord("无分类").build()
         ).collect(Collectors.toList());
 
-        userList = Stream.of(
-                new User("xiaowang", 20, "male", "b@thoughtworks.com", "11234567890")
-        ).collect(Collectors.toList());
+
     }
 
 
     @GetMapping("/list")
+    @JsonView(RsEvent.PublicView.class)
     public ResponseEntity<List<RsEvent>> getAllRsEvent(@RequestParam(required = false) Integer start,
                                                        @RequestParam(required = false) Integer end) {
         if (start == null || end == null) {
@@ -44,11 +48,13 @@ public class RsController {
     }
 
     @GetMapping("/{index}")
+    @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) {
         return ResponseEntity.ok(rsList.get(index));
     }
 
     @PostMapping("/event")
+    @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         User user = rsEvent.getUser();
         if (userList.stream().noneMatch((it) -> it.getUserName().equals(user.getUserName()))) {
@@ -62,8 +68,8 @@ public class RsController {
     }
 
     @GetMapping("/user/list")
-    public List<User> getUserList() {
-        return userList;
+    public ResponseEntity<List<User>> getUserList() {
+        return ResponseEntity.ok(userList);
     }
 
     @PutMapping("/{index}")
