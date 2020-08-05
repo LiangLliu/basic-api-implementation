@@ -346,6 +346,35 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
         }
+
+        @Test
+        public void should_not_add_one_user_when_given_one_user_number_is_not_11_digits() throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("abcdrfg")
+                            .age(20)
+                            .gender("male")
+                            .email("b@thoughtworks.com")
+                            .phone("123456789")
+                            .build())
+                    .build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rsEventRequest))
+                    .andExpect(status().isBadRequest());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(1))
+                    .andExpect(status().isOk());
+
+        }
     }
 
     /**

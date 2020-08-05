@@ -28,5 +28,6 @@ public class User {
     @Email
     private String email;
 
+    @Pattern(regexp = "^[1][0-9]{10}$")
     private String phone;
 }
