@@ -105,7 +105,6 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
 
-
         }
 
         @Test
@@ -292,6 +291,7 @@ class RsControllerTest {
             mockMvc.perform(post("/rs/event")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(rsEventRequest))
+                    .andExpect(jsonPath("$.error", is("invalid param")))
                     .andExpect(status().isBadRequest());
 
             mockMvc.perform(get("/rs/users"))

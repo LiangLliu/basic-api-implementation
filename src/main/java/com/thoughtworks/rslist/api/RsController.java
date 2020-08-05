@@ -9,6 +9,7 @@ import com.thoughtworks.rslist.exception.InvalidRequestParamException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -117,10 +118,22 @@ public class RsController {
     }
 
 
-    @ExceptionHandler({InvalidIndexException.class, InvalidRequestParamException.class})
-    public ResponseEntity exceptionHandler(RuntimeException exception) {
+    @ExceptionHandler({InvalidIndexException.class,
+            InvalidRequestParamException.class,
+            MethodArgumentNotValidException.class})
+    public ResponseEntity exceptionHandler(Exception exception) {
+
+        String message;
         CommonError commonError = new CommonError();
-        commonError.setError(exception.getMessage());
+
+        if (exception instanceof MethodArgumentNotValidException) {
+            message = "invalid param";
+        } else {
+            message = exception.getMessage();
+        }
+
+
+        commonError.setError(message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
     }
 }
