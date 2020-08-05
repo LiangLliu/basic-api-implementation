@@ -176,191 +176,113 @@ class RsControllerTest {
         @Test
         public void should_not_add_one_user_when_given_one_user_username_is_null() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName(null)
                             .age(20)
                             .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
+                            .build()
+            );
 
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_username_length_than_8() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfghi")
                             .age(20)
                             .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
-
+                            .build()
+            );
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_gender_is_null() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfg")
                             .age(20)
                             .gender(null)
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
+                            .build()
+            );
 
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_age_is_null() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfg")
                             .age(null)
                             .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
-
+                            .build()
+            );
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_age_is_Less_than_18_greater_than_100() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfg")
                             .age(102)
                             .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
+                            .build()
+            );
 
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_email_is_error() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfg")
                             .age(20)
                             .gender("male")
                             .email("thoughtworks.com")
                             .phone("11234567890")
-                            .build())
-                    .build();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/user/list"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
+                            .build()
+            );
 
         }
 
         @Test
         public void should_not_add_one_user_when_given_one_user_number_is_not_11_digits() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder()
-                    .eventName("第四条事件")
-                    .keyWord("无分类")
-                    .user(User.builder()
+
+            postCheckAddUserValidation(
+                    User.builder()
                             .userName("abcdrfg")
                             .age(20)
                             .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("123456789")
-                            .build())
-                    .build();
+                            .build()
+            );
+        }
+
+        private void postCheckAddUserValidation(User user) throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(user).build();
 
             ObjectMapper objectMapper = new ObjectMapper();
             String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
@@ -375,6 +297,7 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
         }
+
     }
 
     /**
@@ -438,7 +361,6 @@ class RsControllerTest {
 
     }
 
-
     /**
      * delete 请求
      */
@@ -459,6 +381,5 @@ class RsControllerTest {
         }
 
     }
-
 
 }
