@@ -6,6 +6,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.CommonError;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.exception.InvalidRequestParamException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 @ControllerAdvice
 @RestController
 @RequestMapping("/rs")
+@Slf4j
 public class RsController {
 
     private final List<RsEvent> rsList;
@@ -125,6 +127,8 @@ public class RsController {
 
         String message;
         CommonError commonError = new CommonError();
+
+        log.error("{}.error :  {}", exception.getClass(), exception.getMessage());
 
         if (exception instanceof MethodArgumentNotValidException) {
             message = "invalid param";
