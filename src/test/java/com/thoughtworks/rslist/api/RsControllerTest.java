@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -105,7 +106,17 @@ class RsControllerTest {
         @Test
         public void should_add_one_rs_event_when_given_eventName_and_keyWord() throws Exception {
 
-            RsEvent rsEvent = RsEvent.builder().eventName("第四条事件").keyWord("无分类").build();
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("xiaowang")
+                            .age(19)
+                            .gender("female")
+                            .email("a@thoughtworks.com")
+                            .phone("18888888888")
+                            .build())
+                    .build();
 
             ObjectMapper objectMapper = new ObjectMapper();
             String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
@@ -116,20 +127,15 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
             mockMvc.perform(get("/rs/list"))
-                    .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                    .andExpect(jsonPath("$[2].keyWord", is("无分类")))
                     .andExpect(jsonPath("$[3].eventName", is("第四条事件")))
                     .andExpect(jsonPath("$[3].keyWord", is("无分类")))
+                    .andExpect(jsonPath("$[3].user.userName", is("xiaowang")))
                     .andExpect(status().isOk());
         }
     }
 
     /**
-     * post 请求
+     * Put 请求
      */
     @Nested
     public class PutRequestTest {
@@ -190,6 +196,9 @@ class RsControllerTest {
     }
 
 
+    /**
+     * delete 请求
+     */
     @Nested
     public class DeleteMethodTest {
 

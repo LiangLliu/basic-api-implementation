@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RsEvent {
-    private String eventName;
-    private String keyWord;
-    private User user;
+public class User {
+    private String userName;
+    private Integer age;
+    private String gender;
+    private String email;
+    private String phone;
 }

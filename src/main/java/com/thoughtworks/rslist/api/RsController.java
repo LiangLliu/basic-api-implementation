@@ -1,9 +1,11 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -12,15 +14,17 @@ import java.util.stream.Stream;
 @RequestMapping("/rs")
 public class RsController {
 
-    private final List<RsEvent> rsList = init();
+    private final List<RsEvent> rsList;
+    private final List<User> userList;
 
-    private List<RsEvent> init() {
-
-        return Stream.of(
+    {
+        rsList = Stream.of(
                 RsEvent.builder().eventName("第一条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第二条事件").keyWord("无分类").build(),
                 RsEvent.builder().eventName("第三条事件").keyWord("无分类").build()
         ).collect(Collectors.toList());
+
+        userList = new ArrayList<>();
     }
 
 
@@ -40,6 +44,10 @@ public class RsController {
 
     @PostMapping("/event")
     public void addOneRsEvent(@RequestBody RsEvent rsEvent) {
+        User user = rsEvent.getUser();
+        if (userList.stream().noneMatch((it) -> it.getUserName().equals(user.getUserName()))) {
+            userList.add(user);
+        }
         rsList.add(rsEvent);
     }
 
