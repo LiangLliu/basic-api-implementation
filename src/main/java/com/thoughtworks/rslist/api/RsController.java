@@ -5,6 +5,7 @@ import com.thoughtworks.rslist.domain.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class RsController {
     }
 
     @PostMapping("/event")
-    public void addOneRsEvent(@RequestBody RsEvent rsEvent) {
+    public void addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         User user = rsEvent.getUser();
         if (userList.stream().noneMatch((it) -> it.getUserName().equals(user.getUserName()))) {
             userList.add(user);
