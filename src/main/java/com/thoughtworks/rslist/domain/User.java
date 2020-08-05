@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -18,6 +19,7 @@ public class User {
     @Size(max = 8)
     private String userName;
 
+    @NotNull
     private Integer age;
 
     @NotBlank

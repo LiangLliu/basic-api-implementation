@@ -174,7 +174,7 @@ class RsControllerTest {
         }
 
         @Test
-        public void should_not_add_one_add_user_when_given_one_user_username_is_null() throws Exception {
+        public void should_not_add_one_user_when_given_one_user_username_is_null() throws Exception {
 
             RsEvent rsEvent = RsEvent.builder()
                     .eventName("第四条事件")
@@ -203,7 +203,7 @@ class RsControllerTest {
         }
 
         @Test
-        public void should_not_add_one_add_user_when_given_one_user_username_length_than_8() throws Exception {
+        public void should_not_add_one_user_when_given_one_user_username_length_than_8() throws Exception {
 
             RsEvent rsEvent = RsEvent.builder()
                     .eventName("第四条事件")
@@ -232,7 +232,7 @@ class RsControllerTest {
         }
 
         @Test
-        public void should_not_add_one_add_user_when_given_one_user_gender_is_null() throws Exception {
+        public void should_not_add_one_user_when_given_one_user_gender_is_null() throws Exception {
 
             RsEvent rsEvent = RsEvent.builder()
                     .eventName("第四条事件")
@@ -241,6 +241,35 @@ class RsControllerTest {
                             .userName("abcdrfg")
                             .age(20)
                             .gender(null)
+                            .email("b@thoughtworks.com")
+                            .phone("11234567890")
+                            .build())
+                    .build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rsEventRequest))
+                    .andExpect(status().isBadRequest());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(1))
+                    .andExpect(status().isOk());
+
+        }
+
+        @Test
+        public void should_not_add_one_user_when_given_one_user_age_is_null() throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("abcdrfg")
+                            .age(null)
+                            .gender("male")
                             .email("b@thoughtworks.com")
                             .phone("11234567890")
                             .build())
