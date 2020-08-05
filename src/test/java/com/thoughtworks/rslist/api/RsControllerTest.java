@@ -288,6 +288,35 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
         }
+
+        @Test
+        public void should_not_add_one_user_when_given_one_user_age_is_Less_than_18_greater_than_100() throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("abcdrfg")
+                            .age(102)
+                            .gender("male")
+                            .email("b@thoughtworks.com")
+                            .phone("11234567890")
+                            .build())
+                    .build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rsEventRequest))
+                    .andExpect(status().isBadRequest());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(1))
+                    .andExpect(status().isOk());
+
+        }
     }
 
     /**
