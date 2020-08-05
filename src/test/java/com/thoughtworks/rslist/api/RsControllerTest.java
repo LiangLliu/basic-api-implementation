@@ -230,6 +230,35 @@ class RsControllerTest {
                     .andExpect(status().isOk());
 
         }
+
+        @Test
+        public void should_not_add_one_add_user_when_given_one_user_gender_is_null() throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("abcdrfg")
+                            .age(20)
+                            .gender(null)
+                            .email("b@thoughtworks.com")
+                            .phone("11234567890")
+                            .build())
+                    .build();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rsEventRequest))
+                    .andExpect(status().isBadRequest());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(1))
+                    .andExpect(status().isOk());
+
+        }
     }
 
     /**

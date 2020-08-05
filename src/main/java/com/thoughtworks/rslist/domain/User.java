@@ -20,6 +20,7 @@ public class User {
 
     private Integer age;
 
+    @NotBlank
     private String gender;
 
     private String email;
