@@ -25,6 +25,7 @@ public class User {
     @NotBlank
     private String gender;
 
+    @Email
     private String email;
 
     private String phone;
