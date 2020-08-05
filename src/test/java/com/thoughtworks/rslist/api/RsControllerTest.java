@@ -55,41 +55,40 @@ class RsControllerTest {
         @Test
         public void should_get_one_rs_event_when_given_event_id() throws Exception {
 
-            mockMvc.perform(get("/rs/1"))
+            mockMvc.perform(get("/rs/0"))
                     .andExpect(jsonPath("$.eventName", is("第一条事件")))
                     .andExpect(jsonPath("$.keyWord", is("无分类")))
                     .andExpect(status().isOk());
 
-            mockMvc.perform(get("/rs/2"))
+            mockMvc.perform(get("/rs/1"))
                     .andExpect(jsonPath("$.eventName", is("第二条事件")))
                     .andExpect(jsonPath("$.keyWord", is("无分类")))
                     .andExpect(status().isOk());
 
-            mockMvc.perform(get("/rs/3"))
+            mockMvc.perform(get("/rs/2"))
                     .andExpect(jsonPath("$.eventName", is("第三条事件")))
                     .andExpect(jsonPath("$.keyWord", is("无分类")))
                     .andExpect(status().isOk());
-
         }
 
         @Test
         public void should_get_a_list_of_ranges_when_given_between_two_index() throws Exception {
 
-            mockMvc.perform(get("/rs/list?start=1&end=2"))
+            mockMvc.perform(get("/rs/list?start=0&end=2"))
                     .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                     .andExpect(jsonPath("$[0].keyWord", is("无分类")))
                     .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
                     .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                     .andExpect(status().isOk());
 
-            mockMvc.perform(get("/rs/list?start=2&end=3"))
+            mockMvc.perform(get("/rs/list?start=1&end=3"))
                     .andExpect(jsonPath("$[0].eventName", is("第二条事件")))
                     .andExpect(jsonPath("$[0].keyWord", is("无分类")))
                     .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
                     .andExpect(jsonPath("$[1].keyWord", is("无分类")))
                     .andExpect(status().isOk());
 
-            mockMvc.perform(get("/rs/list?start=1&end=3"))
+            mockMvc.perform(get("/rs/list?start=0&end=3"))
                     .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
                     .andExpect(jsonPath("$[0].keyWord", is("无分类")))
                     .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
@@ -280,10 +279,10 @@ class RsControllerTest {
         public void should_update_one_rs_event_when_given_index_and_eventName() throws Exception {
 
             updateRsEvent(RsEvent.builder().eventName("第1条事件").build(),
-                    1);
+                    0);
 
             updateRsEvent(RsEvent.builder().eventName("第3条事件").keyWord("类别三").build(),
-                    3);
+                    2);
         }
 
         private void updateRsEvent(RsEvent rsEvent, Integer rsEventId) throws Exception {

@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,17 +34,17 @@ public class RsController {
 
 
     @GetMapping("/list")
-    public List<RsEvent> getAllRsEvent(@RequestParam(required = false) Integer start,
-                                       @RequestParam(required = false) Integer end) {
+    public ResponseEntity<List<RsEvent>> getAllRsEvent(@RequestParam(required = false) Integer start,
+                                                       @RequestParam(required = false) Integer end) {
         if (start == null || end == null) {
-            return rsList;
+            return ResponseEntity.ok(rsList);
         }
-        return rsList.subList(start - 1, end);
+        return ResponseEntity.ok(rsList.subList(start, end));
     }
 
     @GetMapping("/{index}")
-    public RsEvent getOneRsEvent(@PathVariable Integer index) {
-        return rsList.get(index - 1);
+    public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) {
+        return ResponseEntity.ok(rsList.get(index));
     }
 
     @PostMapping("/event")
@@ -56,7 +57,7 @@ public class RsController {
     }
 
     @GetMapping("/user/list")
-    public List<User> getRsList() {
+    public List<User> getUserList() {
         return userList;
     }
 
@@ -67,16 +68,16 @@ public class RsController {
         }
 
         if (!isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index - 1).setEventName(rsEventRequest.getEventName());
+            rsList.get(index).setEventName(rsEventRequest.getEventName());
             rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
         }
 
         if (!isEmpty(rsEventRequest.getEventName()) && isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index - 1).setEventName(rsEventRequest.getEventName());
+            rsList.get(index).setEventName(rsEventRequest.getEventName());
         }
 
         if (isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
+            rsList.get(index).setKeyWord(rsEventRequest.getKeyWord());
         }
     }
 
