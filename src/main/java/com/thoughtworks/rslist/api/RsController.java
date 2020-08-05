@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@ControllerAdvice
 @RestController
 @RequestMapping("/rs")
 public class RsController {
@@ -24,7 +25,9 @@ public class RsController {
                 RsEvent.builder().eventName("第三条事件").keyWord("无分类").build()
         ).collect(Collectors.toList());
 
-        userList = new ArrayList<>();
+        userList = Stream.of(
+                new User("xiaowang", 20, "male", "b@thoughtworks.com", "11234567890")
+        ).collect(Collectors.toList());
     }
 
 
@@ -49,6 +52,11 @@ public class RsController {
             userList.add(user);
         }
         rsList.add(rsEvent);
+    }
+
+    @GetMapping("/user/list")
+    public List<User> getRsList() {
+        return userList;
     }
 
     @PutMapping("/{index}")

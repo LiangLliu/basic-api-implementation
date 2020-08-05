@@ -110,7 +110,7 @@ class RsControllerTest {
                     .eventName("第四条事件")
                     .keyWord("无分类")
                     .user(User.builder()
-                            .userName("xiaowang")
+                            .userName("xiaoming")
                             .age(19)
                             .gender("female")
                             .email("a@thoughtworks.com")
@@ -129,8 +129,48 @@ class RsControllerTest {
             mockMvc.perform(get("/rs/list"))
                     .andExpect(jsonPath("$[3].eventName", is("第四条事件")))
                     .andExpect(jsonPath("$[3].keyWord", is("无分类")))
+                    .andExpect(jsonPath("$[3].user.userName", is("xiaoming")))
+                    .andExpect(status().isOk());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(2))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        public void should_add_one_rs_event_but_not_add_user_when_given_rs_event_and_existed_user() throws Exception {
+
+            RsEvent rsEvent = RsEvent.builder()
+                    .eventName("第四条事件")
+                    .keyWord("无分类")
+                    .user(User.builder()
+                            .userName("xiaowang")
+                            .age(20)
+                            .gender("male")
+                            .email("b@thoughtworks.com")
+                            .phone("11234567890")
+                            .build())
+                    .build();
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(rsEventRequest))
+                    .andExpect(status().isOk());
+
+            mockMvc.perform(get("/rs/list"))
+                    .andExpect(jsonPath("$[3].eventName", is("第四条事件")))
+                    .andExpect(jsonPath("$[3].keyWord", is("无分类")))
                     .andExpect(jsonPath("$[3].user.userName", is("xiaowang")))
                     .andExpect(status().isOk());
+
+            mockMvc.perform(get("/rs/user/list"))
+                    .andExpect(jsonPath("$.length()").value(1))
+                    .andExpect(status().isOk());
+
         }
     }
 
