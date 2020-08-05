@@ -67,7 +67,7 @@ public class RsController {
                 .build();
     }
 
-    @GetMapping("/user/list")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getUserList() {
         return ResponseEntity.ok(userList);
     }

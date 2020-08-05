@@ -96,6 +96,18 @@ class RsControllerTest {
                     .andExpect(jsonPath("$[2].keyWord", is("无分类")))
                     .andExpect(status().isOk());
         }
+
+        @Test
+        public void should_get_a_user_list_when_given_a_get_list_request() throws Exception {
+
+            mockMvc.perform(get("/rs/users"))
+                    .andExpect(jsonPath("$[0].user_name", is("xiaowang")))
+                    .andExpect(jsonPath("$[0].user_age", is(20)))
+                    .andExpect(jsonPath("$[0].user_gender", is("male")))
+                    .andExpect(jsonPath("$[0].user_email", is("b@thoughtworks.com")))
+                    .andExpect(jsonPath("$[0].user_phone", is("11234567890")))
+                    .andExpect(status().isOk());
+        }
     }
 
     /**
@@ -141,12 +153,12 @@ class RsControllerTest {
                     .andExpect(header().string("index", "3"))
                     .andExpect(status().isCreated());
 
-            mockMvc.perform(get("/rs/user/list"))
+            mockMvc.perform(get("/rs/users"))
                     .andExpect(jsonPath("$.length()").value(expiredLength))
                     .andExpect(status().isOk());
 
             mockMvc.perform(get("/rs/3"))
-                    .andExpect(jsonPath("$.user.userName", is(rsEvent.getUser().getUserName())))
+                    .andExpect(jsonPath("$.user.user_name", is(rsEvent.getUser().getUserName())))
                     .andExpect(status().isOk());
 
 
@@ -264,7 +276,7 @@ class RsControllerTest {
                     .content(rsEventRequest))
                     .andExpect(status().isBadRequest());
 
-            mockMvc.perform(get("/rs/user/list"))
+            mockMvc.perform(get("/rs/users"))
                     .andExpect(jsonPath("$.length()").value(1))
                     .andExpect(status().isOk());
 
