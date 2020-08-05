@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -48,12 +49,16 @@ public class RsController {
     }
 
     @PostMapping("/event")
-    public void addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+    public ResponseEntity addOneRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         User user = rsEvent.getUser();
         if (userList.stream().noneMatch((it) -> it.getUserName().equals(user.getUserName()))) {
             userList.add(user);
         }
         rsList.add(rsEvent);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .header("index", String.valueOf(rsList.size() - 1))
+                .build();
     }
 
     @GetMapping("/user/list")

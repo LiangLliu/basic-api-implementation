@@ -15,9 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest
@@ -139,7 +138,8 @@ class RsControllerTest {
             mockMvc.perform(post("/rs/event")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(rsEventRequest))
-                    .andExpect(status().isOk());
+                    .andExpect(header().string("index", "3"))
+                    .andExpect(status().isCreated());
 
             mockMvc.perform(get("/rs/list"))
                     .andExpect(jsonPath("$[3].user.userName", is(rsEvent.getUser().getUserName())))
