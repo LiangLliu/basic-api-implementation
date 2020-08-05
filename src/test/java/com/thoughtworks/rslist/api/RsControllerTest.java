@@ -1,23 +1,26 @@
 package com.thoughtworks.rslist.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.CommonError;
+import com.thoughtworks.rslist.exception.InvalidIndexException;
+import com.thoughtworks.rslist.handle.ControllerHandle;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 @SpringBootTest
 class RsControllerTest {
@@ -68,6 +71,13 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.eventName", is("第三条事件")))
                     .andExpect(jsonPath("$.keyWord", is("无分类")))
                     .andExpect(status().isOk());
+        }
+
+        @Test
+        public void should_return_bad_request_when_given_a_index_out_of_round() throws Exception {
+            mockMvc.perform(get("/rs/10"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.error", is("invalid index")));
         }
 
         @Test

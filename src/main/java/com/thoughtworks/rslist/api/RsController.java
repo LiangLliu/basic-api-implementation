@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.InvalidIndexException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -36,7 +37,6 @@ public class RsController {
 
     }
 
-
     @GetMapping("/list")
     @JsonView(RsEvent.PublicView.class)
     public ResponseEntity<List<RsEvent>> getAllRsEvent(@RequestParam(required = false) Integer start,
@@ -49,7 +49,10 @@ public class RsController {
 
     @GetMapping("/{index}")
     @JsonView(RsEvent.PrivateView.class)
-    public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) {
+    public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) throws InvalidIndexException {
+        if (index > rsList.size() - 1 || index < 0) {
+            throw new InvalidIndexException("invalid index");
+        }
         return ResponseEntity.ok(rsList.get(index));
     }
 
@@ -73,10 +76,8 @@ public class RsController {
     }
 
     @PutMapping("/{index}")
-    public void updateOneRsEvent(@PathVariable Integer index, @RequestBody RsEvent rsEventRequest) throws Exception {
-        if (index > rsList.size()) {
-            throw new Exception("下标越界");
-        }
+    public void updateOneRsEvent(@PathVariable Integer index, @RequestBody RsEvent rsEventRequest) {
+
 
         if (!isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
             rsList.get(index).setEventName(rsEventRequest.getEventName());

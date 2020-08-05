@@ -72,7 +72,7 @@ notice: 注意@Valid和@Validated的配合使用
 
 
 
-### 
+### error-handing
 * 给所有接口添加错误处理：
     1. get /rs/list时对start和end进行校验，如果超出范围则返回 400 {error:"invalid request param"}
     2. get /rs/{index} 对index进行校验，如果超出范围则返回 400 {error:"invalid index"}
