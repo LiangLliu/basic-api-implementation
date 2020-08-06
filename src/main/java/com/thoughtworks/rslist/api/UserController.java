@@ -1,14 +1,12 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.thoughtworks.rslist.dto.UserDto;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.thoughtworks.rslist.service.UserService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -24,9 +22,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity addUser(@RequestBody @Valid User user) {
-
         userService.add(user);
-
         return ResponseEntity.created(null).build();
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
+        return ResponseEntity.ok(userService.getUserById(userId));
     }
 }
