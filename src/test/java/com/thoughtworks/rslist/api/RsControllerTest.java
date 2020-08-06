@@ -74,19 +74,11 @@ class RsControllerTest {
         @Test
         public void should_get_one_rs_event_when_given_event_id() throws Exception {
 
-            mockMvc.perform(get("/rs/0"))
-                    .andExpect(jsonPath("$.eventName", is("第一条事件")))
-                    .andExpect(jsonPath("$.keyWord", is("无分类")))
-                    .andExpect(status().isOk());
-
             mockMvc.perform(get("/rs/1"))
-                    .andExpect(jsonPath("$.eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$.keyWord", is("无分类")))
-                    .andExpect(status().isOk());
-
-            mockMvc.perform(get("/rs/2"))
-                    .andExpect(jsonPath("$.eventName", is("第三条事件")))
-                    .andExpect(jsonPath("$.keyWord", is("无分类")))
+                    .andExpect(jsonPath("$.eventName", is("第一条热搜事件")))
+                    .andExpect(jsonPath("$.keyWord", is("娱乐")))
+                    .andExpect(jsonPath("$.id", is(1)))
+                    .andExpect(jsonPath("$.voteNum", is(10)))
                     .andExpect(status().isOk());
         }
 

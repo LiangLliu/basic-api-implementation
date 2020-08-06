@@ -9,6 +9,7 @@ import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.exception.*;
 import com.thoughtworks.rslist.request.RsEventRequest;
 import com.thoughtworks.rslist.request.VoteRequest;
+import com.thoughtworks.rslist.response.RsEventResponse;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import com.thoughtworks.rslist.service.VoteService;
@@ -78,13 +79,16 @@ public class RsController {
         return ResponseEntity.ok(rsList.subList(start, end));
     }
 
-    @GetMapping("/{index}")
-    @JsonView(RsEvent.PrivateView.class)
-    public ResponseEntity<RsEvent> getOneRsEvent(@PathVariable Integer index) throws InvalidIndexException {
-        if (isOutOfRound(index)) {
-            throw new InvalidIndexException("invalid index");
+    @GetMapping("/{rsEventId}")
+    public ResponseEntity<RsEventResponse> getOneRsEvent(@PathVariable Integer rsEventId) throws InvalidIndexException {
+
+
+        if (!rsEventService.isExistUserById(rsEventId)) {
+            throw new InvalidIndexException("invalid rsEventId");
         }
-        return ResponseEntity.ok(rsList.get(index));
+        RsEventDto rsEventDto = rsEventService.findById(rsEventId);
+        Integer count = voteService.findByRsEventVoteCount(rsEventDto);
+        return ResponseEntity.ok(RsEventResponse.from(rsEventDto, count));
     }
 
     private boolean isOutOfRound(@PathVariable Integer index) {
@@ -110,7 +114,7 @@ public class RsController {
         return ResponseEntity.ok(userList);
     }
 
-    @PutMapping("/{index}")
+    @PutMapping("/{rsEventId}")
     public ResponseEntity updateOneRsEvent(@PathVariable Integer index, @RequestBody @Valid RsEventRequest rsEventRequest) {
 
         if (!userService.isExistUserById(rsEventRequest.getUserId())) {
@@ -136,7 +140,7 @@ public class RsController {
         return nativeAttribute;
     }
 
-    @DeleteMapping("/{index}")
+    @DeleteMapping("/{rsEventId}")
     @JsonView(RsEvent.PrivateView.class)
     public void deleteOneRsEvent(@PathVariable Integer index) throws Exception {
         if (index > rsList.size()) {

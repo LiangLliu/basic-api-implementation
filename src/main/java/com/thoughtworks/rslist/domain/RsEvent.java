@@ -42,6 +42,7 @@ public class RsEvent {
 
     public static RsEventEntity toRsEntity(RsEventDto rsEventDto) {
         return RsEventEntity.builder()
+                .id(rsEventDto.getId())
                 .eventName(rsEventDto.getEventName())
                 .keyWord(rsEventDto.getKeyWord())
                 .userId(rsEventDto.getUserId())
