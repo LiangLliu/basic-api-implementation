@@ -9,6 +9,8 @@ import com.thoughtworks.rslist.request.RsEventRequest;
 import com.thoughtworks.rslist.service.RsEventService;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RsEventServiceImpl implements RsEventService {
 
@@ -27,5 +29,17 @@ public class RsEventServiceImpl implements RsEventService {
     @Override
     public long getRsListLength() {
         return rsEventRepository.count();
+    }
+
+    @Override
+    public RsEventDto findById(Integer rsEventId) {
+        RsEventEntity rsEventEntity = rsEventRepository.findById(rsEventId).get();
+        return RsEventDto.from(rsEventEntity);
+    }
+
+    @Override
+    public RsEventDto updateRsEvent(RsEventDto rsEventDto) {
+        RsEventEntity saveEvent = rsEventRepository.save(RsEvent.toRsEntity(rsEventDto));
+        return RsEventDto.from(saveEvent);
     }
 }

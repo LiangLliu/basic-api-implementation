@@ -188,58 +188,7 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.error", is("user id is invalid")))
                     .andExpect(status().isBadRequest());
 
-
             assertEquals(start, rsEventService.getRsListLength());
-        }
-
-
-        @Test
-        public void should_add_one_rs_event_when_given_eventName_and_keyWord() throws Exception {
-
-            addRsEventAndUser(User.builder()
-                            .userName("xiaoming")
-                            .age(19)
-                            .gender("female")
-                            .email("a@thoughtworks.com")
-                            .phone("18888888888")
-                            .build(),
-                    2);
-        }
-
-        @Test
-        public void should_add_one_rs_event_but_not_add_user_when_given_rs_event_and_existed_user() throws Exception {
-
-            addRsEventAndUser(User.builder()
-                            .userName("xiaowang")
-                            .age(20)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build(),
-                    1);
-        }
-
-        private void addRsEventAndUser(User user, Integer expiredLength) throws Exception {
-
-            RsEvent rsEvent = RsEvent.builder().eventName("第四条事件").keyWord("无分类").user(user).build();
-
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(header().string("index", "3"))
-                    .andExpect(status().isCreated());
-
-            mockMvc.perform(get("/rs/users"))
-                    .andExpect(jsonPath("$.length()").value(expiredLength))
-                    .andExpect(status().isOk());
-
-            mockMvc.perform(get("/rs/3"))
-                    .andExpect(jsonPath("$.user.user_name", is(rsEvent.getUser().getUserName())))
-                    .andExpect(status().isOk());
-
-
         }
 
 
@@ -368,6 +317,24 @@ class RsControllerTest {
      */
     @Nested
     public class PutRequestTest {
+
+        @Test
+        public void should_update_rs_event_when_rs_event_userId_equal_request_userId() throws Exception {
+            RsEventRequest rsEventRequest = RsEventRequest.builder()
+                    .eventName("第一条热搜事件更改")
+                    .keyWord("娱乐")
+                    .userId(1).build();
+
+            String request = objectMapper.writeValueAsString(rsEventRequest);
+
+            mockMvc.perform(put("/rs/1" )
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(status().isOk());
+
+        }
+
+
         @Test
         public void should_update_one_rs_event_when_given_index_and_eventName() throws Exception {
 

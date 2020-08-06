@@ -7,4 +7,8 @@ public interface RsEventService {
     RsEventDto save(RsEventRequest rsEventRequest);
 
     long getRsListLength();
+
+    RsEventDto findById(Integer id);
+
+    RsEventDto updateRsEvent(RsEventDto rsEventDto);
 }

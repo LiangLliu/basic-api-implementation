@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 @Slf4j
-public class ControllerHandle {
+public class RsEventControllerHandle {
 
     @ExceptionHandler({InvalidIndexException.class,
             InvalidRequestParamException.class,

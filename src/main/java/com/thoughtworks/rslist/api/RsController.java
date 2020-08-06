@@ -110,21 +110,18 @@ public class RsController {
     }
 
     @PutMapping("/{index}")
-    public void updateOneRsEvent(@PathVariable Integer index, @RequestBody RsEvent rsEventRequest) {
+    public ResponseEntity updateOneRsEvent(@PathVariable Integer index, @RequestBody @Valid RsEventRequest rsEventRequest) {
 
-
-        if (!isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index).setEventName(rsEventRequest.getEventName());
-            rsList.get(index - 1).setKeyWord(rsEventRequest.getKeyWord());
+        if (!userService.isExistUserById(rsEventRequest.getUserId())) {
+            throw new UserNotFoundException("user id is invalid");
         }
 
-        if (!isEmpty(rsEventRequest.getEventName()) && isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index).setEventName(rsEventRequest.getEventName());
-        }
+        RsEventDto rsEventDto = rsEventService.findById(index);
 
-        if (isEmpty(rsEventRequest.getEventName()) && !isEmpty(rsEventRequest.getKeyWord())) {
-            rsList.get(index).setKeyWord(rsEventRequest.getKeyWord());
+        if (rsEventDto.getUserId().equals(rsEventRequest.getId())) {
+            rsEventService.updateRsEvent(rsEventDto);
         }
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{index}")

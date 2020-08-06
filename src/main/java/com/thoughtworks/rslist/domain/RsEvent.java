@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thoughtworks.rslist.dto.RsEventDto;
 import com.thoughtworks.rslist.entity.RsEventEntity;
 import com.thoughtworks.rslist.request.RsEventRequest;
 import lombok.*;
@@ -35,6 +36,15 @@ public class RsEvent {
                 .eventName(rsEventRequest.getEventName())
                 .keyWord(rsEventRequest.getKeyWord())
                 .userId(rsEventRequest.getUserId())
+                .build();
+    }
+
+
+    public static RsEventEntity toRsEntity(RsEventDto rsEventDto) {
+        return RsEventEntity.builder()
+                .eventName(rsEventDto.getEventName())
+                .keyWord(rsEventDto.getKeyWord())
+                .userId(rsEventDto.getUserId())
                 .build();
     }
 
