@@ -113,14 +113,23 @@ public class RsController {
             throw new UserNotFoundException("user id is invalid");
         }
 
-
         RsEventDto rsEventDto = rsEventService.findById(index);
         if (rsEventDto.getUserId().equals(rsEventRequest.getId())) {
+
+            rsEventDto.setEventName(nonEmptyAttribute(rsEventRequest.getEventName(), rsEventDto.getEventName()));
+            rsEventDto.setKeyWord(nonEmptyAttribute(rsEventRequest.getKeyWord(), rsEventDto.getKeyWord()));
             rsEventService.updateRsEvent(rsEventDto);
         } else {
             throw new RsEVentIdInvalidException("rsEvent id is invalid");
         }
         return ResponseEntity.ok().build();
+    }
+
+    private String nonEmptyAttribute(String editAttribute, String nativeAttribute) {
+        if (!StringUtils.isEmpty(editAttribute)) {
+            return editAttribute;
+        }
+        return nativeAttribute;
     }
 
     @DeleteMapping("/{index}")

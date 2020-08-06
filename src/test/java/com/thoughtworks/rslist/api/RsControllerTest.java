@@ -352,6 +352,21 @@ class RsControllerTest {
 
 
         @Test
+        public void should_update_rs_event_when_rs_event_userId_equal_request_userId_but_only_eventName_or_keyword() throws Exception {
+            RsEventRequest rsEventRequest = RsEventRequest.builder()
+                    .eventName(null)
+                    .keyWord("修改娱乐测试")
+                    .userId(1).build();
+
+            String request = objectMapper.writeValueAsString(rsEventRequest);
+
+            mockMvc.perform(put("/rs/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
         public void should_update_one_rs_event_when_given_index_and_eventName() throws Exception {
 
             updateRsEvent(RsEvent.builder().eventName("第1条事件").build(),
