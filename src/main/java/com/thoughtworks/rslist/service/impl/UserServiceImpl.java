@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.request.RsEventRequest;
 import com.thoughtworks.rslist.request.UserRequest;
 import com.thoughtworks.rslist.service.UserService;
 
@@ -35,4 +36,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Integer userId) {
         userRepository.deleteById(userId);
     }
+
+    @Override
+    public boolean isExistUserById(Integer userId) {
+        return userRepository.existsById(userId);
+    }
+
 }

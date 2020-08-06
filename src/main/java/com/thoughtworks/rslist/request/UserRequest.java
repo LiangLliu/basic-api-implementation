@@ -13,6 +13,9 @@ import javax.validation.constraints.*;
 @NoArgsConstructor
 @Builder
 public class UserRequest {
+
+    private Integer id;
+
     @NotBlank
     @Size(max = 8)
     @JsonProperty("user_name")

@@ -1,14 +1,20 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.request.RsEventRequest;
+import com.thoughtworks.rslist.service.RsEventService;
+import com.thoughtworks.rslist.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
@@ -16,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -27,9 +34,15 @@ class RsControllerTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RsEventService rsEventService;
+
     @BeforeEach
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new RsController()).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new RsController(userService, rsEventService)).build();
     }
 
     /**
@@ -132,6 +145,36 @@ class RsControllerTest {
      */
     @Nested
     public class PostRequestTest {
+
+
+        @Test
+        public void should_add_rs_event_when_user_is_exist() throws Exception {
+
+            RsEventRequest rsEventRequest = RsEventRequest.builder()
+                    .eventName("第一条热搜事件")
+                    .keyWord("娱乐")
+                    .userId(1).build();
+
+            String request = objectMapper.writeValueAsString(rsEventRequest);
+
+            long start = rsEventService.getRsListLength();
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(status().isCreated());
+
+            assertEquals(start + 1, rsEventService.getRsListLength());
+
+        }
+
+
+        @Test
+        public void should_not_add_rs_event_when_user_is_not_exist() {
+
+        }
+
+
         @Test
         public void should_add_one_rs_event_when_given_eventName_and_keyWord() throws Exception {
 

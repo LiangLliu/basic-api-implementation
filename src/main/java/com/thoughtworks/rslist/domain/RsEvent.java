@@ -1,9 +1,10 @@
 package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.request.RsEventRequest;
 import lombok.*;
 
-import javax.validation.Valid;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +26,17 @@ public class RsEvent {
     private String keyWord;
 
     @JsonView(PrivateView.class)
-    private @Valid User user;
+    private User user;
+
+
+    public static RsEventEntity toRsEntity(RsEventRequest rsEventRequest) {
+
+        return RsEventEntity.builder()
+                .eventName(rsEventRequest.getEventName())
+                .keyWord(rsEventRequest.getKeyWord())
+                .userId(rsEventRequest.getUserId())
+                .build();
+    }
 
 
 }

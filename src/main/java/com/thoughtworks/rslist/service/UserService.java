@@ -10,4 +10,6 @@ public interface UserService {
     UserDto getUserById(Integer userId);
 
     void deleteUserById(Integer userId);
+
+    boolean isExistUserById(Integer userId);
 }
