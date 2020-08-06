@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -33,6 +35,8 @@ class UserControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
+    @Transactional
+    @Rollback
     public void should_add_a_user_when_given_user_json() throws Exception {
 
         User user = User.builder().userName("name 0")
