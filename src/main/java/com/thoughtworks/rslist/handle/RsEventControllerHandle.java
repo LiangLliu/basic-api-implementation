@@ -1,9 +1,6 @@
 package com.thoughtworks.rslist.handle;
 
-import com.thoughtworks.rslist.exception.CommonError;
-import com.thoughtworks.rslist.exception.InvalidIndexException;
-import com.thoughtworks.rslist.exception.InvalidRequestParamException;
-import com.thoughtworks.rslist.exception.UserNotFoundException;
+import com.thoughtworks.rslist.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +15,8 @@ public class RsEventControllerHandle {
     @ExceptionHandler({InvalidIndexException.class,
             InvalidRequestParamException.class,
             MethodArgumentNotValidException.class,
-            UserNotFoundException.class})
+            UserNotFoundException.class,
+            RsEVentIdInvalidException.class})
     public ResponseEntity exceptionHandler(Exception exception) {
 
         String message;

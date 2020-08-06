@@ -327,10 +327,26 @@ class RsControllerTest {
 
             String request = objectMapper.writeValueAsString(rsEventRequest);
 
-            mockMvc.perform(put("/rs/1" )
+            mockMvc.perform(put("/rs/1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(request))
                     .andExpect(status().isOk());
+
+        }
+
+        @Test
+        public void should_not_update_rs_event_when_rs_event_userId_not_equal_request_userId() throws Exception {
+            RsEventRequest rsEventRequest = RsEventRequest.builder()
+                    .eventName("第一条热搜事件更改")
+                    .keyWord("娱乐")
+                    .userId(2).build();
+
+            String request = objectMapper.writeValueAsString(rsEventRequest);
+
+            mockMvc.perform(put("/rs/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(status().isBadRequest());
 
         }
 

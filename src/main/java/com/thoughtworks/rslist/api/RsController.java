@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
-import com.thoughtworks.rslist.exception.CommonError;
-import com.thoughtworks.rslist.exception.InvalidIndexException;
-import com.thoughtworks.rslist.exception.InvalidRequestParamException;
-import com.thoughtworks.rslist.exception.UserNotFoundException;
+import com.thoughtworks.rslist.exception.*;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.request.RsEventRequest;
 import com.thoughtworks.rslist.service.RsEventService;
@@ -116,10 +113,12 @@ public class RsController {
             throw new UserNotFoundException("user id is invalid");
         }
 
-        RsEventDto rsEventDto = rsEventService.findById(index);
 
+        RsEventDto rsEventDto = rsEventService.findById(index);
         if (rsEventDto.getUserId().equals(rsEventRequest.getId())) {
             rsEventService.updateRsEvent(rsEventDto);
+        } else {
+            throw new RsEVentIdInvalidException("rsEvent id is invalid");
         }
         return ResponseEntity.ok().build();
     }
