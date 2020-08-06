@@ -1,11 +1,11 @@
 package com.thoughtworks.rslist.service;
 
-import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.request.UserRequest;
 
 public interface UserService {
 
-    void add(User user);
+    void addUser(UserRequest userRequest);
 
     UserDto getUserById(Integer userId);
 

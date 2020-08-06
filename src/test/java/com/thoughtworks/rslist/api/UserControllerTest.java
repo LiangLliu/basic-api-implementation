@@ -6,6 +6,7 @@ import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 
+import com.thoughtworks.rslist.request.UserRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -63,12 +64,12 @@ class UserControllerTest {
     @Test
     public void should_add_a_user_when_given_user_json() throws Exception {
 
-        User user = User.builder().userName("name 0")
+        UserRequest userRequest = UserRequest.builder().userName("name 0")
                 .gender("male")
                 .age(19)
                 .phone("11234567890")
                 .email("a@b.com").build();
-        String saveUser = objectMapper.writeValueAsString(user);
+        String saveUser = objectMapper.writeValueAsString(userRequest);
 
         int size = userRepository.findAll().size();
 

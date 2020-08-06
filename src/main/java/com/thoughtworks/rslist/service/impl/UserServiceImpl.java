@@ -4,6 +4,7 @@ import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.request.UserRequest;
 import com.thoughtworks.rslist.service.UserService;
 
 import org.springframework.stereotype.Service;
@@ -20,16 +21,8 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void add(User user) {
-
-        UserEntity userEntity = UserEntity.builder()
-                .userName(user.getUserName())
-                .gender(user.getGender())
-                .age(user.getAge())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .build();
-        userRepository.save(userEntity);
+    public void addUser(UserRequest userRequest) {
+        userRepository.save(User.userRequestToUserEntity(userRequest));
     }
 
     @Override

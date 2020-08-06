@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.UserDto;
 
+import com.thoughtworks.rslist.request.UserRequest;
 import com.thoughtworks.rslist.service.UserService;
 
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity addUser(@RequestBody @Valid User user) {
-        userService.add(user);
+    public ResponseEntity addUser(@RequestBody @Valid UserRequest userRequest) {
+        userService.addUser(userRequest);
         return ResponseEntity.created(null).build();
     }
 
@@ -33,9 +34,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity deleteUser(@PathVariable Integer userId) {
-
         userService.deleteUserById(userId);
-
         return ResponseEntity.ok().build();
     }
 }
