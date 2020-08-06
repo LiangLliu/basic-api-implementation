@@ -100,7 +100,7 @@ public class RsController {
                     .header("id", String.valueOf(rsEventDto.getId()))
                     .build();
         }
-        throw new UserNotFoundException("user is not found");
+        throw new UserNotFoundException("user id is invalid");
     }
 
     @GetMapping("/users")
@@ -141,24 +141,4 @@ public class RsController {
     }
 
 
-    @ExceptionHandler({InvalidIndexException.class,
-            InvalidRequestParamException.class,
-            MethodArgumentNotValidException.class})
-    public ResponseEntity exceptionHandler(Exception exception) {
-
-        String message;
-        CommonError commonError = new CommonError();
-
-        log.error("{}.error :  {}", exception.getClass(), exception.getMessage());
-
-        if (exception instanceof MethodArgumentNotValidException) {
-            message = "invalid param";
-        } else {
-            message = exception.getMessage();
-        }
-
-
-        commonError.setError(message);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(commonError);
-    }
 }

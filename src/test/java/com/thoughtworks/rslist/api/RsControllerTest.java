@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
@@ -28,21 +29,22 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 class RsControllerTest {
 
-    private MockMvc mockMvc;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private RsEventService rsEventService;
 
+    @Autowired
+    private MockMvc mockMvc;
+
     @BeforeEach
     public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new RsController(userService, rsEventService)).build();
+//        mockMvc = MockMvcBuilders.standaloneSetup(new RsController(userService, rsEventService)).build();
     }
 
     /**
@@ -170,8 +172,24 @@ class RsControllerTest {
 
 
         @Test
-        public void should_not_add_rs_event_when_user_is_not_exist() {
+        public void should_not_add_rs_event_when_user_is_not_exist() throws Exception {
+            RsEventRequest rsEventRequest = RsEventRequest.builder()
+                    .eventName("第一条热搜事件")
+                    .keyWord("娱乐")
+                    .userId(Integer.MAX_VALUE).build();
 
+            String request = objectMapper.writeValueAsString(rsEventRequest);
+
+            long start = rsEventService.getRsListLength();
+
+            mockMvc.perform(post("/rs/event")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(jsonPath("$.error", is("user id is invalid")))
+                    .andExpect(status().isBadRequest());
+
+
+            assertEquals(start, rsEventService.getRsListLength());
         }
 
 
