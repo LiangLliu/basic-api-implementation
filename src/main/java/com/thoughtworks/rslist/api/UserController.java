@@ -30,4 +30,12 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(@PathVariable Integer userId) {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity deleteUser(@PathVariable Integer userId) {
+
+        userService.deleteUserById(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }

@@ -34,7 +34,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer userId) {
-        UserEntity userEntity = userRepository.findById(userId).get();
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(NullPointerException::new);
         return UserDto.from(userEntity);
+    }
+
+    @Override
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
     }
 }

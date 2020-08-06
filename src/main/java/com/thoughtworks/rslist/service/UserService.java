@@ -8,4 +8,6 @@ public interface UserService {
     void add(User user);
 
     UserDto getUserById(Integer userId);
+
+    void deleteUserById(Integer userId);
 }
