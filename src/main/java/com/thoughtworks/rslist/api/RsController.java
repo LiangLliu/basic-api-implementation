@@ -85,6 +85,7 @@ public class RsController {
     }
 
     @GetMapping("/users")
+    @JsonView(RsEvent.PrivateView.class)
     public ResponseEntity<List<User>> getUserList() {
         return ResponseEntity.ok(userList);
     }
@@ -108,6 +109,7 @@ public class RsController {
     }
 
     @DeleteMapping("/{index}")
+    @JsonView(RsEvent.PrivateView.class)
     public void deleteOneRsEvent(@PathVariable Integer index) throws Exception {
         if (index > rsList.size()) {
             throw new Exception("下标越界");
