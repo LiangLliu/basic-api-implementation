@@ -6,27 +6,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "rs_event")
-public class RsEventEntity {
+@Table(name = "vote")
+public class VoteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String eventName;
+    private Integer number;
 
-    private String keyWord;
+    private LocalDateTime localDateTime;
 
-    @Column(name = "user_id")
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
-    private UserEntity userEntity;
+    @ManyToOne
+    @JoinColumn(name = "rs_event_is")
+    private RsEventEntity rsEvent;
 }
