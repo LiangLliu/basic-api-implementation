@@ -42,4 +42,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsById(userId);
     }
 
+    @Override
+    public UserDto updateUser(UserDto userDto) {
+        return UserDto
+                .from(userRepository
+                        .save(User
+                                .userRequestToUserEntity(userDto))
+                );
+    }
+
 }

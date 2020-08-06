@@ -23,6 +23,8 @@ public class UserDto {
 
     private String phone;
 
+    private Integer voteNum;
+
     public static UserDto from(UserEntity userEntity) {
         return UserDto.builder()
                 .id(userEntity.getId())
@@ -31,6 +33,7 @@ public class UserDto {
                 .age(userEntity.getAge())
                 .phone(userEntity.getPhone())
                 .email(userEntity.getEmail())
+                .voteNum(userEntity.getVoteNum())
                 .build();
     }
 }

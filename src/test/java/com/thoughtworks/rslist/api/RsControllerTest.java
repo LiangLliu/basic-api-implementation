@@ -8,6 +8,7 @@ import com.thoughtworks.rslist.domain.User;
 
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.request.RsEventRequest;
+import com.thoughtworks.rslist.request.VoteRequest;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,9 @@ import org.springframework.http.MediaType;
 
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -147,6 +151,23 @@ class RsControllerTest {
      */
     @Nested
     public class PostRequestTest {
+
+
+        @Test
+        public void should_add_vote_when_given_rsEvent_and_vote_number() throws Exception {
+
+            VoteRequest voteRequest = VoteRequest.builder()
+                    .userId(1)
+                    .voteNum(5)
+                    .build();
+
+            String request = objectMapper.writeValueAsString(voteRequest);
+
+            mockMvc.perform(post("/rs/vote/1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(request))
+                    .andExpect(status().isCreated());
+        }
 
 
         @Test

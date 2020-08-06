@@ -11,4 +11,6 @@ public interface RsEventService {
     RsEventDto findById(Integer id);
 
     RsEventDto updateRsEvent(RsEventDto rsEventDto);
+
+    boolean isExistUserById(Integer rsEventId);
 }

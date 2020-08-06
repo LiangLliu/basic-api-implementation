@@ -4,22 +4,23 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.dto.RsEventDto;
+import com.thoughtworks.rslist.dto.UserDto;
+import com.thoughtworks.rslist.dto.VoteDto;
 import com.thoughtworks.rslist.exception.*;
-import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.request.RsEventRequest;
+import com.thoughtworks.rslist.request.VoteRequest;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.UserService;
+import com.thoughtworks.rslist.service.VoteService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,6 +35,8 @@ public class RsController {
     private final UserService userService;
 
     private final RsEventService rsEventService;
+
+    private final VoteService voteService;
 
 
     private final List<RsEvent> rsList;
@@ -53,9 +56,10 @@ public class RsController {
 
     }
 
-    public RsController(UserService userService, RsEventService rsEventService) {
+    public RsController(UserService userService, RsEventService rsEventService, VoteService voteService) {
         this.userService = userService;
         this.rsEventService = rsEventService;
+        this.voteService = voteService;
     }
 
 
@@ -141,8 +145,38 @@ public class RsController {
         rsList.remove(index - 1);
     }
 
-    private boolean isEmpty(String string) {
-        return StringUtils.isEmpty(string);
+
+    @PostMapping("/vote/{rsEventId}")
+    public ResponseEntity voteRsEvent(@PathVariable Integer rsEventId,
+                                      @RequestBody @Valid VoteRequest voteRequest) {
+
+        if (!rsEventService.isExistUserById(rsEventId)) {
+            throw new RsEVentIdInvalidException("rsEvent id is invalid");
+        }
+
+        if (!userService.isExistUserById(voteRequest.getUserId())) {
+            throw new UserNotFoundException("user id is invalid");
+        }
+
+        UserDto userDto = userService.getUserById(voteRequest.getUserId());
+
+        if (userDto.getVoteNum() < voteRequest.getVoteNum()) {
+            throw new UserNotEnoughVoteException("not enough user votes");
+        }
+
+        RsEventDto rsEventDto = rsEventService.findById(rsEventId);
+
+        voteService.save(VoteDto.builder()
+                .number(voteRequest.getVoteNum())
+                .rsEvent(rsEventDto)
+                .user(userDto)
+                .localDateTime(LocalDateTime.now())
+                .build());
+
+        userDto.setVoteNum(userDto.getVoteNum() - voteRequest.getVoteNum());
+        userService.updateUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
     }
 
 

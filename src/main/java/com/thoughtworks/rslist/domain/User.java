@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.thoughtworks.rslist.dto.UserDto;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.request.UserRequest;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,18 @@ public class User {
                 .age(userRequest.getAge())
                 .phone(userRequest.getPhone())
                 .email(userRequest.getEmail())
+                .build();
+    }
+
+    public static UserEntity userRequestToUserEntity(UserDto userDto) {
+        return UserEntity.builder()
+                .id(userDto.getId())
+                .userName(userDto.getUserName())
+                .gender(userDto.getGender())
+                .age(userDto.getAge())
+                .phone(userDto.getPhone())
+                .email(userDto.getEmail())
+                .voteNum(userDto.getVoteNum())
                 .build();
     }
 }

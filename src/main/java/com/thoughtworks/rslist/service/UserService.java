@@ -12,4 +12,6 @@ public interface UserService {
     void deleteUserById(Integer userId);
 
     boolean isExistUserById(Integer userId);
+
+    UserDto updateUser(UserDto userDto);
 }

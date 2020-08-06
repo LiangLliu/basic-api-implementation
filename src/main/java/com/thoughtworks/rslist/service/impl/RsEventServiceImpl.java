@@ -42,4 +42,9 @@ public class RsEventServiceImpl implements RsEventService {
         RsEventEntity saveEvent = rsEventRepository.save(RsEvent.toRsEntity(rsEventDto));
         return RsEventDto.from(saveEvent);
     }
+
+    @Override
+    public boolean isExistUserById(Integer rsEventId) {
+        return rsEventRepository.existsById(rsEventId);
+    }
 }
