@@ -11,7 +11,6 @@ import com.thoughtworks.rslist.service.VoteService;
 
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -34,12 +33,11 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public Integer findByRsEventVoteCount(RsEventDto rsEventDto) {
 
-//        return voteRepository
-//                .findByRsEvent(rsEventDto.())
-//                .stream()
-//                .map(VoteEntity::getNumber)
-//                .reduce(0, Integer::sum);
-        return null;
+        return voteRepository
+                .findVoteEntitiesByRsEvent(RsEvent.toRsEntity(rsEventDto))
+                .stream()
+                .map(VoteEntity::getNumber)
+                .reduce(0, Integer::sum);
 
     }
 }

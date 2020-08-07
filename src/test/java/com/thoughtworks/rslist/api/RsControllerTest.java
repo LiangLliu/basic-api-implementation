@@ -78,7 +78,7 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.eventName", is("第一条热搜事件")))
                     .andExpect(jsonPath("$.keyWord", is("娱乐")))
                     .andExpect(jsonPath("$.id", is(1)))
-                    .andExpect(jsonPath("$.voteNum", is(10)))
+                    .andExpect(jsonPath("$.voteNum", is(5)))
                     .andExpect(status().isOk());
         }
 
@@ -143,7 +143,6 @@ class RsControllerTest {
      */
     @Nested
     public class PostRequestTest {
-
 
 
         @Test

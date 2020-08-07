@@ -88,6 +88,7 @@ public class RsController {
         }
         RsEventDto rsEventDto = rsEventService.findById(rsEventId);
         Integer count = voteService.findByRsEventVoteCount(rsEventDto);
+
         return ResponseEntity.ok(RsEventResponse.from(rsEventDto, count));
     }
 

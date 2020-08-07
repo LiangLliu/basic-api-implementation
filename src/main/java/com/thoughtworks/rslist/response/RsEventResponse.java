@@ -14,14 +14,14 @@ public class RsEventResponse {
     private Integer id;
     private String eventName;
     private Integer voteNum;
-    private String keyword;
+    private String keyWord;
 
 
     public static RsEventResponse from(RsEventDto rsEventDto, Integer count) {
         return RsEventResponse.builder()
                 .id(rsEventDto.getId())
                 .eventName(rsEventDto.getEventName())
-                .keyword(rsEventDto.getKeyWord())
+                .keyWord(rsEventDto.getKeyWord())
                 .voteNum(count)
                 .build();
     }
