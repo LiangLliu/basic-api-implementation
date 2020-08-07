@@ -34,11 +34,12 @@ public class VoteServiceImpl implements VoteService {
     @Override
     public Integer findByRsEventVoteCount(RsEventDto rsEventDto) {
 
-        return voteRepository
-                .findByRsEvent(rsEventDto.getId())
-                .stream()
-                .map(VoteEntity::getNumber)
-                .reduce(0, Integer::sum);
+//        return voteRepository
+//                .findByRsEvent(rsEventDto.())
+//                .stream()
+//                .map(VoteEntity::getNumber)
+//                .reduce(0, Integer::sum);
+        return null;
 
     }
 }

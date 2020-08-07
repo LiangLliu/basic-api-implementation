@@ -145,6 +145,7 @@ class RsControllerTest {
     public class PostRequestTest {
 
 
+
         @Test
         public void should_add_vote_when_given_rsEvent_and_vote_number() throws Exception {
 

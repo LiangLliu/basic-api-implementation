@@ -29,6 +29,6 @@ public class VoteEntity {
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "rs_event_is")
+    @JoinColumn(name = "rs_event_id")
     private RsEventEntity rsEvent;
 }

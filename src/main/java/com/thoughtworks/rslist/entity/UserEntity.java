@@ -31,7 +31,8 @@ public class UserEntity {
 
     private String phone;
 
-    private Integer voteNum;
+    @Builder.Default
+    private Integer voteNum = 10;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "userId")
     private List<RsEventEntity> eventEntities;

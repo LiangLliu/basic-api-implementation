@@ -114,7 +114,7 @@ public class RsController {
         return ResponseEntity.ok(userList);
     }
 
-    @PutMapping("/{rsEventId}")
+    @PutMapping("/{index}")
     public ResponseEntity updateOneRsEvent(@PathVariable Integer index, @RequestBody @Valid RsEventRequest rsEventRequest) {
 
         if (!userService.isExistUserById(rsEventRequest.getUserId())) {
