@@ -1,6 +1,6 @@
 package com.thoughtworks.rslist.exception;
 
-public class InvalidIndexException extends RuntimeException {
+public class InvalidIndexException extends BaseException {
     public InvalidIndexException(String message) {
         super(message);
     }

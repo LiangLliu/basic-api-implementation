@@ -1,11 +1,10 @@
 package com.thoughtworks.rslist.service;
 
-import com.thoughtworks.rslist.dto.RsEventDto;
-import com.thoughtworks.rslist.dto.VoteDto;
 
-public interface VoteService {
-    VoteDto save(VoteDto voteDto);
+import org.springframework.stereotype.Service;
 
 
-    Integer findByRsEventVoteCount(RsEventDto rsEventDto);
+@Service
+public class VoteService {
+
 }

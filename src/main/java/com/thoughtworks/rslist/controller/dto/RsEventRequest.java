@@ -1,5 +1,4 @@
-package com.thoughtworks.rslist.request;
-
+package com.thoughtworks.rslist.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,15 +7,17 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VoteRequest {
+public class RsEventRequest {
 
-    @NotNull
-    private Integer voteNum;
+    private Integer id;
+
+    private String eventName;
+
+    private String keyWord;
 
     @NotNull
     private Integer userId;

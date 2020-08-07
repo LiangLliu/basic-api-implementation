@@ -1,4 +1,4 @@
-package com.thoughtworks.rslist.entity;
+package com.thoughtworks.rslist.repository.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -22,7 +22,9 @@ public class VoteEntity {
 
     private Integer number;
 
-    private LocalDateTime localDateTime;
+    private Instant createTime;
+
+    private Instant updateTime;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

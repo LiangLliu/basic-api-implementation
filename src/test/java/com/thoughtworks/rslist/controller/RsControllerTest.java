@@ -1,16 +1,13 @@
-package com.thoughtworks.rslist.api;
+package com.thoughtworks.rslist.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.thoughtworks.rslist.domain.RsEvent;
-import com.thoughtworks.rslist.domain.User;
-
-import com.thoughtworks.rslist.repository.RsEventRepository;
-import com.thoughtworks.rslist.request.RsEventRequest;
-import com.thoughtworks.rslist.request.VoteRequest;
 import com.thoughtworks.rslist.service.RsEventService;
-import com.thoughtworks.rslist.service.UserService;
+import com.thoughtworks.rslist.service.domain.RsEvent;
+import com.thoughtworks.rslist.service.domain.User;
+
+import com.thoughtworks.rslist.controller.dto.RsEventRequest;
+import com.thoughtworks.rslist.controller.dto.VoteRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,10 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

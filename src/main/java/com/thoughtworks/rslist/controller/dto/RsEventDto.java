@@ -1,10 +1,12 @@
-package com.thoughtworks.rslist.dto;
+package com.thoughtworks.rslist.controller.dto;
 
-import com.thoughtworks.rslist.entity.RsEventEntity;
+import com.thoughtworks.rslist.repository.entity.RsEventEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 
 @Data
@@ -16,6 +18,9 @@ public class RsEventDto {
     private String eventName;
     private String keyWord;
     private Integer userId;
+
+    private Instant createTime;
+    private Instant updateTime;
 
     public static RsEventDto from(RsEventEntity rsEventEntity) {
         return RsEventDto.builder()

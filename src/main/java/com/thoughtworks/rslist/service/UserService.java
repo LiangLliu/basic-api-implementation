@@ -1,17 +1,39 @@
 package com.thoughtworks.rslist.service;
 
-import com.thoughtworks.rslist.dto.UserDto;
-import com.thoughtworks.rslist.request.UserRequest;
+import com.thoughtworks.rslist.exception.UserNotFoundException;
+import com.thoughtworks.rslist.service.domain.User;
+import com.thoughtworks.rslist.controller.dto.UserDto;
+import com.thoughtworks.rslist.repository.entity.UserEntity;
+import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.controller.dto.UserRequest;
 
-public interface UserService {
+import org.springframework.stereotype.Service;
 
-    void addUser(UserRequest userRequest);
 
-    UserDto getUserById(Integer userId);
+@Service
+public class UserService {
 
-    void deleteUserById(Integer userId);
+    private final UserRepository userRepository;
 
-    boolean isExistUserById(Integer userId);
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    UserDto updateUser(UserDto userDto);
+    public void add(UserRequest userRequest) {
+        userRepository.save(UserEntity.from(userRequest.toUser()));
+    }
+
+    public UserDto getUserById(Integer userId) {
+
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> {
+            throw new UserNotFoundException("user id is invalid");
+        });
+
+        return UserDto.from(userEntity);
+    }
+
+    public void deleteUserById(Integer userId) {
+        userRepository.deleteById(userId);
+    }
+
 }

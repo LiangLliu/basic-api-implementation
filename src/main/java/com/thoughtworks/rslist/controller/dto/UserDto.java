@@ -1,10 +1,12 @@
-package com.thoughtworks.rslist.dto;
+package com.thoughtworks.rslist.controller.dto;
 
-import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -24,6 +26,9 @@ public class UserDto {
     private String phone;
 
     private Integer voteNum;
+
+    private Instant createTime;
+    private Instant updateTime;
 
     public static UserDto from(UserEntity userEntity) {
         return UserDto.builder()

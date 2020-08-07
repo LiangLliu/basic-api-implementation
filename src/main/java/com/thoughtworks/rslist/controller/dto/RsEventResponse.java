@@ -1,10 +1,11 @@
-package com.thoughtworks.rslist.response;
+package com.thoughtworks.rslist.controller.dto;
 
-import com.thoughtworks.rslist.dto.RsEventDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +16,8 @@ public class RsEventResponse {
     private String eventName;
     private Integer voteNum;
     private String keyWord;
+    private Instant createTime;
+    private Instant updateTime;
 
 
     public static RsEventResponse from(RsEventDto rsEventDto, Integer count) {

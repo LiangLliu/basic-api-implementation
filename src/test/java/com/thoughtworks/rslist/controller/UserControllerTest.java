@@ -1,12 +1,11 @@
-package com.thoughtworks.rslist.api;
+package com.thoughtworks.rslist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thoughtworks.rslist.domain.User;
-import com.thoughtworks.rslist.dto.UserDto;
-import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.controller.dto.UserDto;
+import com.thoughtworks.rslist.repository.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
 
-import com.thoughtworks.rslist.request.UserRequest;
+import com.thoughtworks.rslist.controller.dto.UserRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -46,6 +45,7 @@ class UserControllerTest {
                 .userName("name 0")
                 .gender("male")
                 .age(19)
+                .voteNum(10)
                 .phone("11234567890")
                 .email("a@b.com").build();
 

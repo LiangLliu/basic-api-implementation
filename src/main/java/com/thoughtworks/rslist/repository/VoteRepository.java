@@ -1,8 +1,8 @@
 package com.thoughtworks.rslist.repository;
 
 
-import com.thoughtworks.rslist.entity.RsEventEntity;
-import com.thoughtworks.rslist.entity.VoteEntity;
+import com.thoughtworks.rslist.repository.entity.RsEventEntity;
+import com.thoughtworks.rslist.repository.entity.VoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
