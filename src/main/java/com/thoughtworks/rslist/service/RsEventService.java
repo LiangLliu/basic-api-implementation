@@ -6,7 +6,7 @@ import com.thoughtworks.rslist.repository.entity.RsEventEntity;
 import com.thoughtworks.rslist.repository.entity.UserEntity;
 import com.thoughtworks.rslist.repository.entity.VoteEntity;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
-import com.thoughtworks.rslist.exception.UserNotFoundException;
+
 import com.thoughtworks.rslist.repository.RsEventRepository;
 
 import com.thoughtworks.rslist.repository.UserRepository;
@@ -20,6 +20,10 @@ import java.time.Instant;
 
 @Service
 public class RsEventService {
+
+    private final static String USER_ID_IS_INVALID = "user id is invalid";
+    private final static String RS_EVENT_ID_IS_INVALID = "rsEvent id is invalid";
+    private final static String NOT_ENOUGH_USER_VOTES = "not enough user votes";
 
     private final RsEventRepository rsEventRepository;
 
@@ -38,7 +42,7 @@ public class RsEventService {
     public Integer save(RsEventRequest request) {
 
         if (!userRepository.existsById(request.getUserId())) {
-            throw new InvalidIndexException("invalid rsEventId");
+            throw new InvalidIndexException(USER_ID_IS_INVALID);
         }
         RsEventEntity rsEventEntity = rsEventRepository.save(RsEventEntity.builder()
                 .eventName(request.getEventName())
@@ -54,21 +58,11 @@ public class RsEventService {
         return rsEventRepository.count();
     }
 
-    public RsEventDto findById(Integer rsEventId) {
-        RsEventEntity rsEventEntity = rsEventRepository.findById(rsEventId).get();
-        return RsEventDto.from(rsEventEntity);
-    }
-
-
-
     public RsEventResponse getRsEventById(Integer rsEventId) {
 
-        RsEventEntity rsEventEntity = rsEventRepository.findById(rsEventId)
-                .orElseThrow(() -> {
-                            throw new InvalidIndexException("invalid rsEventId");
-                        }
-                );
-        Integer totalVote = voteRepository.findVoteEntitiesByRsEvent(rsEventEntity).stream()
+        RsEventEntity rsEventEntity = getRsEvenAndCheck(rsEventId);
+        Integer totalVote = voteRepository.findVoteEntitiesByRsEvent(rsEventEntity)
+                .stream()
                 .map(VoteEntity::getNumber)
                 .reduce(0, Integer::sum);
 
@@ -85,48 +79,31 @@ public class RsEventService {
 
     public void update(Integer rsEventId, RsEventRequest request) {
 
-        RsEventEntity rsEventEntity = rsEventRepository.findById(rsEventId)
-                .orElseThrow(() -> {
-                            throw new InvalidIndexException("rsEvent id is invalid");
-                        }
-                );
+        RsEventEntity rsEventEntity = getRsEvenAndCheck(rsEventId);
 
         if (!userRepository.existsById(request.getUserId())) {
-            throw new UserNotFoundException("user id is invalid");
+            throw new InvalidIndexException(USER_ID_IS_INVALID);
         }
 
         if (!rsEventEntity.getId().equals(request.getId())) {
-            throw new InvalidIndexException("rsEvent id is invalid");
+            throw new InvalidIndexException(RS_EVENT_ID_IS_INVALID);
         }
 
         rsEventEntity.setEventName(nonEmptyAttribute(request.getEventName(), rsEventEntity.getEventName()));
         rsEventEntity.setKeyWord(nonEmptyAttribute(request.getKeyWord(), rsEventEntity.getKeyWord()));
-
         rsEventRepository.save(rsEventEntity);
-
     }
 
 
     public void voteRsEven(Integer rsEventId, VoteRequest voteRequest) {
 
-        if (!rsEventRepository.existsById(rsEventId)) {
-            throw new InvalidIndexException("rsEvent id is invalid");
-        }
+        UserEntity userEntity = getUserEntityAndCheck(voteRequest.getUserId());
 
-        UserEntity userEntity = userRepository.findById(voteRequest.getUserId()).orElseThrow(() -> {
-            throw new UserNotFoundException("user id is invalid");
-        });
-
+        RsEventEntity rsEventEntity = getRsEvenAndCheck(rsEventId);
 
         if (userEntity.getVoteNum() < voteRequest.getVoteNum()) {
-            throw new UserNotEnoughVoteException("not enough user votes");
+            throw new UserNotEnoughVoteException(NOT_ENOUGH_USER_VOTES);
         }
-
-        RsEventEntity rsEventEntity = rsEventRepository.findById(rsEventId)
-                .orElseThrow(() -> {
-                            throw new InvalidIndexException("rsEvent id is invalid");
-                        }
-                );
 
         Instant now = Instant.now();
 
@@ -142,7 +119,6 @@ public class RsEventService {
         userEntity.setUpdateTime(now);
 
         userRepository.save(userEntity);
-
     }
 
 
@@ -152,4 +128,17 @@ public class RsEventService {
         }
         return nativeAttribute;
     }
+
+    private RsEventEntity getRsEvenAndCheck(Integer rsEventId) {
+        return rsEventRepository.findById(rsEventId).orElseThrow(() -> {
+            throw new InvalidIndexException(RS_EVENT_ID_IS_INVALID);
+        });
+    }
+
+    private UserEntity getUserEntityAndCheck(Integer userId) {
+        return userRepository.findById(userId).orElseThrow(() -> {
+            throw new InvalidIndexException(USER_ID_IS_INVALID);
+        });
+    }
+
 }

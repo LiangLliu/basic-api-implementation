@@ -62,7 +62,8 @@ class UserControllerTest {
     @Test
     public void should_add_a_user_when_given_user_json() throws Exception {
 
-        UserRequest userRequest = UserRequest.builder().userName("name 0")
+        UserRequest userRequest = UserRequest.builder()
+                .userName("name 0")
                 .gender("male")
                 .age(19)
                 .phone("11234567890")
@@ -77,9 +78,7 @@ class UserControllerTest {
                 .andExpect(status().isCreated());
 
         assertEquals(size + 1, userRepository.findAll().size());
-
     }
-
 
     @Test
     public void should_delete_one_user_when_given_one_exist_user_id() throws Exception {
