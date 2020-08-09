@@ -16,6 +16,7 @@ import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
 
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Service
 public class RsEventService {
 
     private final static String USER_ID_IS_INVALID = "user id is invalid";

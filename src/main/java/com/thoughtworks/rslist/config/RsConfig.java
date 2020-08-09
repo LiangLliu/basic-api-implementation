@@ -8,10 +8,10 @@ import com.thoughtworks.rslist.service.RsEventService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class RsConfig {
 
-    @Bean
+//    @Bean
     public RsEventService rsEventService(RsEventRepository rsEventRepository,
                                          VoteRepository voteRepository,
                                          UserRepository userRepository,
