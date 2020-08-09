@@ -2,6 +2,7 @@ package com.thoughtworks.rslist.service;
 
 import com.thoughtworks.rslist.controller.dto.*;
 import com.thoughtworks.rslist.exception.InvalidRankingException;
+import com.thoughtworks.rslist.exception.NotEnoughAmountException;
 import com.thoughtworks.rslist.exception.UserNotEnoughVoteException;
 import com.thoughtworks.rslist.repository.TradeRepository;
 import com.thoughtworks.rslist.repository.entity.RsEventEntity;
@@ -19,12 +20,8 @@ import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-
 
 
 public class RsEventService {
@@ -33,6 +30,7 @@ public class RsEventService {
     private final static String RS_EVENT_ID_IS_INVALID = "rsEvent id is invalid";
     private final static String RANKING_IS_INVALID = "ranking is invalid";
     private final static String NOT_ENOUGH_USER_VOTES = "not enough user votes";
+    private static final String NOT_ENOUGH_AMOUNT = "not enough amount";
 
     private final RsEventRepository rsEventRepository;
 
@@ -179,37 +177,52 @@ public class RsEventService {
     public void tradeRsEvent(TradeRequest tradeRequest) {
 
         UserEntity userEntity = getUserEntityAndCheck(tradeRequest.getUserId());
-
-        List<VoteEntity> voteEntities = voteRepository.findAll();
-
-
-        Map<RsEventEntity, Integer> collect = voteEntities.stream()
-                .collect(Collectors.groupingBy(VoteEntity::getRsEvent,
-                        Collectors.summingInt(VoteEntity::getNumber)));
-
-//        collect.entrySet().stream().sorted()
-//                .sorted(Map.Entry.<K, V>comparingByValue()
-//                        .reversed()).forEachOrdered(e -> result.put(e.getKey(), e.getValue()));
-
-        List<RsEventEntity> eventEntities = new ArrayList<>(sortByValue(collect).keySet());
-
-
-        Integer ranking = tradeRequest.getRanking();
-        if (ranking > eventEntities.size()) {
-            throw new InvalidRankingException(RANKING_IS_INVALID);
-        }
+        RsEventEntity rsEventEntity = getRsEvenAndCheck(tradeRequest.getRsEventId());
 
         Instant now = Instant.now();
-
-        tradeRepository.save(TradeEntity.builder()
+        TradeEntity tradeEntity = TradeEntity.builder()
                 .amount(tradeRequest.getAmount())
-                .rank(ranking)
+                .rank(tradeRequest.getRanking())
                 .user(userEntity)
-                .rsEvent(eventEntities.get(ranking - 1))
+                .rsEvent(rsEventEntity)
                 .createTime(now)
                 .updateTime(now)
-                .build());
+                .build();
+
+        Optional<TradeEntity> byRsEvent = tradeRepository.findByRsEvent(rsEventEntity);
+
+        if (byRsEvent.isPresent()) {
+
+            TradeEntity tradeEntity1 = byRsEvent.get();
+
+            if (tradeEntity1.getAmount().compareTo(tradeRequest.getAmount()) >= 0) {
+                throw new NotEnoughAmountException(NOT_ENOUGH_AMOUNT);
+            }
+
+            tradeEntity.setId(tradeEntity1.getId());
+            tradeEntity.setUpdateTime(now);
+            tradeEntity.setAmount(tradeRequest.getAmount());
+        }
+
+        tradeRepository.save(tradeEntity);
     }
+
+    public List<RsEventEntity> getVoteRsEventEntity() {
+//        List<VoteEntity> voteEntities = voteRepository.findAll();
+//
+//
+//        Map<RsEventEntity, Integer> collect = voteEntities.stream()
+//                .collect(Collectors.groupingBy(VoteEntity::getRsEvent,
+//                        Collectors.summingInt(VoteEntity::getNumber)));
+
+        return new ArrayList<>(sortByValue(voteRepository.findAll()
+                .stream()
+                .collect(Collectors.groupingBy(VoteEntity::getRsEvent,
+                        Collectors.summingInt(VoteEntity::getNumber)))
+        ).keySet());
+
+    }
+
 
     public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
         Map<K, V> result = new LinkedHashMap<>();

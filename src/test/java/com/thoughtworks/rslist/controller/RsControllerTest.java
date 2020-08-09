@@ -172,12 +172,50 @@ class RsControllerTest {
             TradeRequest tradeRequest = TradeRequest.builder()
                     .userId(1)
                     .ranking(1)
+                    .rsEventId(1)
                     .amount(new BigDecimal("100.00")).build();
 
             mockMvc.perform(post("/rs/trade")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(tradeRequest)))
                     .andExpect(status().isCreated());
+        }
+
+        /**
+         * 购买热搜事件,如果存在，且出价正确
+         */
+        @Test
+        public void should_update_trade_when_user_buy_is_legal() throws Exception {
+
+            TradeRequest tradeRequest = TradeRequest.builder()
+                    .userId(1)
+                    .ranking(1)
+                    .rsEventId(1)
+                    .amount(new BigDecimal("200.00")).build();
+
+            mockMvc.perform(post("/rs/trade")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsBytes(tradeRequest)))
+                    .andExpect(status().isCreated());
+        }
+
+
+        /**
+         * 购买热搜事件,如果存在，且出价不正确
+         */
+        @Test
+        public void should_not_update_trade_when_user_buy_is_not_legal() throws Exception {
+
+            TradeRequest tradeRequest = TradeRequest.builder()
+                    .userId(1)
+                    .ranking(1)
+                    .rsEventId(1)
+                    .amount(new BigDecimal("100.00")).build();
+
+            mockMvc.perform(post("/rs/trade")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsBytes(tradeRequest)))
+                    .andExpect(status().isBadRequest());
         }
 
     }

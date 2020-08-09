@@ -169,8 +169,10 @@ reference: https://docs.spring.io/spring-javaconfig/docs/1.0.0.M4/reference/html
   * 实现购买热搜，请求：
     ```
     trade: {
+           "userId"
             "amount": 100, （金额）
             "rank": 1      （想购买的热搜排名）
+            "rsEventId"
             }
     ```
   * 如果如果该排名上的热搜没有人购买，那么用户花任意价格即可买到该位热搜

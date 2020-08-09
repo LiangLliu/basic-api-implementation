@@ -22,4 +22,7 @@ public class TradeRequest {
 
     @NotNull
     private BigDecimal amount;
+
+    @NotNull
+    private Integer rsEventId;
 }
