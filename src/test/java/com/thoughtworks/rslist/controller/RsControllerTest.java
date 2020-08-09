@@ -70,7 +70,6 @@ class RsControllerTest {
                     .andExpect(jsonPath("$[0].keyWord", is("娱乐")))
                     .andExpect(jsonPath("$[0].userId", is(1)))
                     .andExpect(status().isOk());
-
         }
 
         @Test
@@ -91,34 +90,6 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.error", is("rsEvent id is invalid")));
         }
 
-        @Test
-        public void should_get_a_list_of_ranges_when_given_between_two_index() throws Exception {
-
-            mockMvc.perform(get("/rs/list?start=0&end=2"))
-                    .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                    .andExpect(status().isOk());
-
-            mockMvc.perform(get("/rs/list?start=1&end=3"))
-                    .andExpect(jsonPath("$[0].eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[1].eventName", is("第三条事件")))
-                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                    .andExpect(status().isOk());
-
-            mockMvc.perform(get("/rs/list?start=0&end=3"))
-                    .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                    .andExpect(jsonPath("$[2].keyWord", is("无分类")))
-                    .andExpect(status().isOk());
-
-
-        }
 
         @Test
         public void should_return_bad_request_when_given_invalid_out_of_round() throws Exception {
@@ -127,17 +98,6 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.error", is("invalid request para")));
         }
 
-        @Test
-        public void should_get_a_user_list_when_given_a_get_list_request() throws Exception {
-
-            mockMvc.perform(get("/rs/users"))
-                    .andExpect(jsonPath("$[0].user_name", is("xiaowang")))
-                    .andExpect(jsonPath("$[0].user_age", is(20)))
-                    .andExpect(jsonPath("$[0].user_gender", is("male")))
-                    .andExpect(jsonPath("$[0].user_email", is("b@thoughtworks.com")))
-                    .andExpect(jsonPath("$[0].user_phone", is("11234567890")))
-                    .andExpect(status().isOk());
-        }
     }
 
     /**
@@ -204,125 +164,6 @@ class RsControllerTest {
                     .andExpect(status().isBadRequest());
 
             assertEquals(start, rsEventService.getRsListLength());
-        }
-
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_username_is_null() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName(null)
-                            .age(20)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_username_length_than_8() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfghi")
-                            .age(20)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_gender_is_null() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfg")
-                            .age(20)
-                            .gender(null)
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_age_is_null() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfg")
-                            .age(null)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_age_is_Less_than_18_greater_than_100() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfg")
-                            .age(102)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_email_is_error() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfg")
-                            .age(20)
-                            .gender("male")
-                            .email("thoughtworks.com")
-                            .phone("11234567890")
-                            .build()
-            );
-        }
-
-        @Test
-        public void should_not_add_one_user_when_given_one_user_number_is_not_11_digits() throws Exception {
-
-            postCheckAddUserValidation(
-                    User.builder()
-                            .userName("abcdrfg")
-                            .age(20)
-                            .gender("male")
-                            .email("b@thoughtworks.com")
-                            .phone("123456789")
-                            .build()
-            );
-        }
-
-        private void postCheckAddUserValidation(User user) throws Exception {
-
-            RsEvent rsEvent = RsEvent.builder().eventName("第四条事件").keyWord("无分类").user(user).build();
-
-            String rsEventRequest = objectMapper.writeValueAsString(rsEvent);
-
-            mockMvc.perform(post("/rs/event")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(rsEventRequest))
-                    .andExpect(jsonPath("$.error", is("invalid param")))
-                    .andExpect(status().isBadRequest());
-
-            mockMvc.perform(get("/rs/users"))
-                    .andExpect(jsonPath("$.length()").value(1))
-                    .andExpect(status().isOk());
-
         }
 
     }
