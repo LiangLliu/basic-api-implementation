@@ -16,6 +16,7 @@ public class RsEventResponse {
     private String eventName;
     private Integer voteNum;
     private String keyWord;
+    private Integer userId;
     private Instant createTime;
     private Instant updateTime;
 

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -141,4 +143,26 @@ public class RsEventService {
         });
     }
 
+    public List<RsEventResponse> getAllRsEvent() {
+        List<RsEventEntity> rsEventEntities = rsEventRepository.findAll();
+
+
+        return rsEventEntities.stream()
+                .map(this::toRsEventResponse)
+                .collect(Collectors.toList());
+
+    }
+
+
+    public RsEventResponse toRsEventResponse(RsEventEntity rsEventEntity) {
+
+        return RsEventResponse.builder()
+                .id(rsEventEntity.getId())
+                .eventName(rsEventEntity.getEventName())
+                .keyWord(rsEventEntity.getKeyWord())
+                .userId(rsEventEntity.getUserId())
+                .createTime(rsEventEntity.getCreateTime())
+                .updateTime(rsEventEntity.getUpdateTime())
+                .build();
+    }
 }

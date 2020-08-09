@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.controller;
 import com.thoughtworks.rslist.controller.dto.RsEventRequest;
 import com.thoughtworks.rslist.controller.dto.VoteRequest;
 import com.thoughtworks.rslist.controller.dto.RsEventResponse;
+import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.service.RsEventService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @ControllerAdvice
 @RestController
@@ -26,6 +28,13 @@ public class RsController {
     @GetMapping("/{rsEventId}")
     public ResponseEntity<RsEventResponse> getOneRsEvent(@PathVariable Integer rsEventId) {
         return ResponseEntity.ok(rsEventService.getRsEventById(rsEventId));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<RsEventResponse>> getRsEventList() {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(rsEventService.getAllRsEvent());
     }
 
     @PostMapping("/event")

@@ -66,12 +66,9 @@ class RsControllerTest {
         public void should_get_rs_list_when_given_get_request() throws Exception {
 
             mockMvc.perform(get("/rs/list"))
-                    .andExpect(jsonPath("$[0].eventName", is("第一条事件")))
-                    .andExpect(jsonPath("$[0].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[1].eventName", is("第二条事件")))
-                    .andExpect(jsonPath("$[1].keyWord", is("无分类")))
-                    .andExpect(jsonPath("$[2].eventName", is("第三条事件")))
-                    .andExpect(jsonPath("$[2].keyWord", is("无分类")))
+                    .andExpect(jsonPath("$[0].eventName", is("第一条热搜事件")))
+                    .andExpect(jsonPath("$[0].keyWord", is("娱乐")))
+                    .andExpect(jsonPath("$[0].userId", is(1)))
                     .andExpect(status().isOk());
 
         }
