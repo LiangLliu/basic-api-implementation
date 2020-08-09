@@ -26,11 +26,11 @@ public class VoteEntity {
 
     private Instant updateTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rs_event_id")
     private RsEventEntity rsEvent;
 }

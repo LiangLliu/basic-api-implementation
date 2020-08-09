@@ -45,16 +45,19 @@ public class UserEntity {
     private List<RsEventEntity> eventEntities;
 
     public static UserEntity from(User user) {
-        return UserEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .id(user.getId())
                 .userName(user.getUserName())
                 .age(user.getAge())
                 .gender(user.getGender())
                 .email(user.getGender())
                 .phone(user.getPhone())
-                .voteNum(user.getVoteNum())
                 .createTime(user.getCreateTime())
                 .updateTime(user.getUpdateTime())
                 .build();
+        if (user.getVoteNum() != null) {
+            userEntity.setVoteNum(user.getVoteNum());
+        }
+        return userEntity;
     }
 }

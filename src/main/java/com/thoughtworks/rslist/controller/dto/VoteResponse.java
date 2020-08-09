@@ -1,6 +1,5 @@
 package com.thoughtworks.rslist.controller.dto;
 
-import com.thoughtworks.rslist.repository.entity.VoteEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,14 +11,14 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VoteDto {
+public class VoteResponse {
     private Integer id;
 
     private Integer number;
 
-    private UserDto user;
+    private Integer userId;
 
-    private RsEventDto rsEvent;
+    private Integer rs_event_id;
 
     private Instant createTime;
     private Instant updateTime;

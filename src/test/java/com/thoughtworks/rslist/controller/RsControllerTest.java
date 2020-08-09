@@ -2,6 +2,8 @@ package com.thoughtworks.rslist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.entity.RsEventEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.domain.RsEvent;
 import com.thoughtworks.rslist.service.domain.User;
@@ -20,6 +22,13 @@ import org.springframework.http.MediaType;
 
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.hamcrest.Matchers.is;
@@ -35,6 +44,9 @@ class RsControllerTest {
 
     @Autowired
     private RsEventService rsEventService;
+
+    @Autowired
+    private RsEventRepository rsEventRepository;
 
     @Autowired
     private MockMvc mockMvc;
@@ -71,15 +83,15 @@ class RsControllerTest {
                     .andExpect(jsonPath("$.eventName", is("第一条热搜事件")))
                     .andExpect(jsonPath("$.keyWord", is("娱乐")))
                     .andExpect(jsonPath("$.id", is(1)))
-                    .andExpect(jsonPath("$.voteNum", is(5)))
+                    .andExpect(jsonPath("$.voteNum", is(15)))
                     .andExpect(status().isOk());
         }
 
         @Test
-        public void should_return_bad_request_when_given_a_index_out_of_round() throws Exception {
-            mockMvc.perform(get("/rs/10"))
+        public void should_return_bad_request_when_given_a_index__of_rs_event_not_exist() throws Exception {
+            mockMvc.perform(get("/rs/" + Integer.MAX_VALUE))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.error", is("invalid index")));
+                    .andExpect(jsonPath("$.error", is("rsEvent id is invalid")));
         }
 
         @Test
