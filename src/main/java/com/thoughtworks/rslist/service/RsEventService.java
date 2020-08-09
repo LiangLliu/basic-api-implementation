@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Service
 public class RsEventService {
 
     private final static String USER_ID_IS_INVALID = "user id is invalid";
