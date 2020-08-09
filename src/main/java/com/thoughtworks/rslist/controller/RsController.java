@@ -1,15 +1,11 @@
 package com.thoughtworks.rslist.controller;
 
 import com.thoughtworks.rslist.controller.dto.RsEventRequest;
+import com.thoughtworks.rslist.controller.dto.TradeRequest;
 import com.thoughtworks.rslist.controller.dto.VoteRequest;
 import com.thoughtworks.rslist.controller.dto.RsEventResponse;
-import com.thoughtworks.rslist.repository.RsEventRepository;
-import com.thoughtworks.rslist.repository.UserRepository;
-import com.thoughtworks.rslist.repository.VoteRepository;
 import com.thoughtworks.rslist.service.RsEventService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +58,14 @@ public class RsController {
     public ResponseEntity<HttpStatus> voteRsEvent(@PathVariable Integer rsEventId,
                                                   @RequestBody @Valid VoteRequest voteRequest) {
 
-        rsEventService.voteRsEven(rsEventId, voteRequest);
+        rsEventService.voteRsEvent(rsEventId, voteRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/trade")
+    public ResponseEntity<HttpStatus> tradeRsEvent(@RequestBody @Valid TradeRequest tradeRequest) {
+
+        rsEventService.tradeRsEvent(tradeRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

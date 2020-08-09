@@ -2,11 +2,10 @@ package com.thoughtworks.rslist.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.thoughtworks.rslist.controller.dto.TradeRequest;
 import com.thoughtworks.rslist.repository.RsEventRepository;
-import com.thoughtworks.rslist.repository.entity.RsEventEntity;
 import com.thoughtworks.rslist.service.RsEventService;
 import com.thoughtworks.rslist.service.domain.RsEvent;
-import com.thoughtworks.rslist.service.domain.User;
 
 import com.thoughtworks.rslist.controller.dto.RsEventRequest;
 import com.thoughtworks.rslist.controller.dto.VoteRequest;
@@ -22,12 +21,7 @@ import org.springframework.http.MediaType;
 
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -146,6 +140,9 @@ class RsControllerTest {
         }
 
 
+        /**
+         * 当用户不存在时，添加用户失败
+         */
         @Test
         public void should_not_add_rs_event_when_user_is_not_exist() throws Exception {
             RsEventRequest rsEventRequest = RsEventRequest.builder()
@@ -164,6 +161,23 @@ class RsControllerTest {
                     .andExpect(status().isBadRequest());
 
             assertEquals(start, rsEventService.getRsListLength());
+        }
+
+        /**
+         * 购买热搜事件
+         */
+        @Test
+        public void should_add_trade_when_user_buy_is_legal() throws Exception {
+
+            TradeRequest tradeRequest = TradeRequest.builder()
+                    .userId(1)
+                    .ranking(1)
+                    .amount(new BigDecimal("100.00")).build();
+
+            mockMvc.perform(post("/rs/trade")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsBytes(tradeRequest)))
+                    .andExpect(status().isCreated());
         }
 
     }
